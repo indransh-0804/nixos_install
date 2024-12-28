@@ -28,7 +28,7 @@ sudo mkswap -L NIX_SWAP /dev/mapper/NixMain-swap
 
 echo "Making btrfs Subvolume ..."
 sudo mkfs.btrfs -L NIX_ROOT /dev/mapper/NixRoot
-sudo mount -t btrfs/dev/disk/by-label/NIX_ROOT /mnt
+sudo mount -t btrfs /dev/disk/by-label/NIX_ROOT /mnt
 sudo btrfs subvolume create /mnt/@
 sudo btrfs subvolume create /mnt/@nix
 sudo btrfs subvolume create /mnt/@log
@@ -41,14 +41,13 @@ sudo btrfs subvolume create /mnt/@home
 sudo umount /mnt/home
 
 echo "Mounting Disk ..."
-mkdir -p /mnt/{home,nix,var/log,.snapshots}
 sudo mount -o umask=0077 /dev/disk/by-label/NIX_BOOT /mnt/boot
 sudo swapon -L NIX_SWAP
-sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@ /dev/disk/by-label/NIX_ROOT /mnt
-sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@nix /dev/disk/by-label/NIX_ROOT /mnt/etc/nixos
-sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@log /dev/disk/by-label/NIX_ROOT /mnt/var/log
-sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@.snap /dev/disk/by-label/NIX_ROOT /mnt/.snap
-sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@home /dev/disk/by-label/NIX_HOME /mnt/home
+sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@ --mkdir /dev/disk/by-label/NIX_ROOT /mnt
+sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@nix --mkdir /dev/disk/by-label/NIX_ROOT /mnt/etc/nixos
+sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@log --mkdir /dev/disk/by-label/NIX_ROOT /mnt/var/log
+sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@.snap --mkdir /dev/disk/by-label/NIX_ROOT /mnt/.snap
+sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@home --mkdir /dev/disk/by-label/NIX_HOME /mnt/home
 
 echo "Finished_"
 lsblk
