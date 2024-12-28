@@ -24,8 +24,8 @@ sudo cryptsetup open --type luks /dev/NixMain/cryptHome NixHome
 
 echo "Making FileSystem ..."
 sudo mkfs.fat  -n NIX_BOOT -F32 "${DISK}"1
-sudo mkfs.ext4 -L NIX_ROOT /dev/mapper/NixMain-NixRoot
-sudo mkfs.ext4 -L NIX_HOME /dev/mapper/NixMain-NixHome
+sudo mkfs.ext4 -L NIX_ROOT /dev/mapper/NixRoot
+sudo mkfs.ext4 -L NIX_HOME /dev/mapper/NixHome
 sudo mkswap -L NIX_SWAP /dev/mapper/NixMain-swap
 
 echo "Mounting Disk ..."
