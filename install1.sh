@@ -9,6 +9,11 @@ echo "The Script Begins..."
 set -e  # Exit on error
 set -x  # Print commands as they run (useful for debugging)
 
+parted "$DISK" -- mklabel gpt
+parted "$DISK" -- mkpart primary 512MiB 100%
+parted "$DISK" -- mkpart ESP fat32 1MiB 512 MiB
+parted "$DISK" -- set 2 boot on
+
 echo "Creating LVM ..."
 sudo pvcreate "${DISK}"2
 sudo vgcreate NixMain "${DISK}"2
@@ -54,3 +59,4 @@ sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@home -
 
 echo "Finished_"
 lsblk
+
