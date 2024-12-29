@@ -44,7 +44,7 @@ cd
 sudo umount -R /mnt
 
 echo "Mounting Disk ..."
-sudo mount -o umask=0077 /dev/disk/by-label/NIX_BOOT /mnt/boot
+sudo mount -o umask=0077 --mkdir /dev/disk/by-label/NIX_BOOT /mnt/boot
 sudo swapon -L NIX_SWAP
 sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@ --mkdir /dev/disk/by-label/NIX_ROOT /mnt
 sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@nix --mkdir /dev/disk/by-label/NIX_ROOT /mnt/etc/nixos
