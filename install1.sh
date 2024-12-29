@@ -33,12 +33,11 @@ sudo btrfs subvolume create /mnt/@
 sudo btrfs subvolume create /mnt/@nix
 sudo btrfs subvolume create /mnt/@log
 sudo btrfs subvolume create /mnt/@.snap
-sudo umount /mnt
 
 sudo mkfs.btrfs -L NIX_HOME /dev/mapper/NixHome
 sudo mount -t btrfs --mkdir /dev/disk/by-label/NIX_HOME /mnt/home
 sudo btrfs subvolume create /mnt/@home
-sudo umount /mnt/home
+sudo umount -R /mnt
 
 echo "Mounting Disk ..."
 sudo mount -o umask=0077 /dev/disk/by-label/NIX_BOOT /mnt/boot
