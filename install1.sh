@@ -26,7 +26,7 @@ echo "Making FileSystem ..."
 sudo mkfs.fat  -n NIX_BOOT -F32 "${DISK}"1
 sudo mkswap -L NIX_SWAP /dev/mapper/NixMain-swap
 sudo mkfs.btrfs -L NIX_ROOT /dev/mapper/NixRoot
-sudo mkfs.btrfs -L NIX_HOME /dev/mapper/NixHome
+sudo mkfs.btrfs -L NIX_HOME /dev/mapper/NixHom
 
 echo "Making btrfs Subvolume ..."
 sudo mount -t btrfs /dev/disk/by-label/NIX_ROOT /mnt
@@ -47,7 +47,7 @@ echo "Mounting Disk ..."
 sudo mount -o umask=0077 --mkdir /dev/disk/by-label/NIX_BOOT /mnt/boot
 sudo swapon -L NIX_SWAP
 sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@ --mkdir /dev/disk/by-label/NIX_ROOT /mnt
-sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@nix --mkdir /dev/disk/by-label/NIX_ROOT /mnt/etc/nixos
+sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@nix --mkdir /dev/disk/by-label/NIX_ROOT /mnt/etc/nix
 sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@log --mkdir /dev/disk/by-label/NIX_ROOT /mnt/var/log
 sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@.snap --mkdir /dev/disk/by-label/NIX_ROOT /mnt/.snap
 sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@home --mkdir /dev/disk/by-label/NIX_HOME /mnt/home
