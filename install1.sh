@@ -18,25 +18,29 @@ sudo lvcreate -l 100%FREE NixMain -n cryptHome
 
 echo "Encrypting lv ..."
 sudo cryptsetup -v -y -c aes-xts-plain64 -s 512 -h sha512 -i 2000 --use-random --label=NIXLUKS_ROOT luksFormat --type luks2 /dev/NixMain/cryptRoot
-sudo cryptsetup open --type luks /dev/NixMain/cryptRoot NixRoot
 sudo cryptsetup -v -y -c aes-xts-plain64 -s 512 -h sha512 -i 2000 --use-random --label=NIXLUKS_HOME luksFormat --type luks2 /dev/NixMain/cryptHome
+sudo cryptsetup open --type luks /dev/NixMain/cryptRoot NixRoot
 sudo cryptsetup open --type luks /dev/NixMain/cryptHome NixHome
 
 echo "Making FileSystem ..."
 sudo mkfs.fat  -n NIX_BOOT -F32 "${DISK}"1
 sudo mkswap -L NIX_SWAP /dev/mapper/NixMain-swap
+sudo mkfs.btrfs -L NIX_ROOT /dev/mapper/NixRoot
+sudo mkfs.btrfs -L NIX_HOME /dev/mapper/NixHome
 
 echo "Making btrfs Subvolume ..."
-sudo mkfs.btrfs -L NIX_ROOT /dev/mapper/NixRoot
 sudo mount -t btrfs /dev/disk/by-label/NIX_ROOT /mnt
-sudo btrfs subvolume create /mnt/@
-sudo btrfs subvolume create /mnt/@nix
-sudo btrfs subvolume create /mnt/@log
-sudo btrfs subvolume create /mnt/@.snap
+cd /mnt
+sudo btrfs subvolume create @
+sudo btrfs subvolume create @nix
+sudo btrfs subvolume create @log
+sudo btrfs subvolume create @.snap
+cd 
 
-sudo mkfs.btrfs -L NIX_HOME /dev/mapper/NixHome
 sudo mount -t btrfs --mkdir /dev/disk/by-label/NIX_HOME /mnt/home
-sudo btrfs subvolume create /mnt/@home
+cd /mnt/home
+sudo btrfs subvolume create @home
+cd
 sudo umount -R /mnt
 
 echo "Mounting Disk ..."
