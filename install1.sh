@@ -59,4 +59,4 @@ sudo mount -t btrfs -o rw,ssd,noatime,compress=zstd,discard=async,subvol=@home -
 
 echo "Finished_"
 lsblk
-
+nixos-generate-config --root /mnt
