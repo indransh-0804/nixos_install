@@ -6,7 +6,7 @@ set -x  # Print commands as they run (useful for debugging)
 
 echo "Creating LVM ..."
 sudo pvcreate nvme0n1p7
-sudo vgcreate ArchMain nvme0n1p7
+sudo vgcreate ArchMain /dev/nvme0n1p7
 sudo lvcreate -L 8G ArchMain -n Swap
 sudo lvcreate -L 64G ArchMain -n cryptRoot
 sudo lvcreate -l 100%FREE ArchMain -n cryptHome
@@ -18,8 +18,8 @@ sudo cryptsetup open --type luks /dev/ArchMain/cryptRoot ArchRoot
 sudo cryptsetup open --type luks /dev/ArchMain/cryptHome ArchHome
 
 echo "Making FileSystem ..."
-sudo mkfs.fat  -n ARCH_BOOT -F32 nvme0n1p5
-sudo mkfs.fat  -n ARCH_EFI -F32 nvme0n1p6
+sudo mkfs.fat  -n ARCH_BOOT -F32 /dev/nvme0n1p5
+sudo mkfs.fat  -n ARCH_EFI -F32 /dev/nvme0n1p6
 sudo mkswap -L ARCH_SWAP /dev/ArchMain/Swap
 sudo mkfs.btrfs -L ARCH_ROOT /dev/mapper/ArchRoot
 sudo mkfs.btrfs -L ARCH_HOME /dev/mapper/ArchHome
